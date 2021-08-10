@@ -45,3 +45,19 @@
   become_user: root
   roles:
     - docker-swarm-add-worker
+
+- name: Install docker-registry
+  hosts: swarm-manager
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  vars_files:
+    - roles/docker_registry/defaults/main.yml
+    - roles/docker_registry/vars/main.yml
+
+  tasks:
+    - include: roles/docker_registry/tasks/main.yml
+
+  handlers:
+    - include: roles/docker_registry/handlers/main.yml
