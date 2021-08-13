@@ -46,18 +46,23 @@
   roles:
     - docker-swarm-add-worker
 
-- name: Install docker-registry
+- name:  deploy docker registry
   hosts: swarm-manager
   become: yes
   become_method: sudo
   become_user: root
+  roles:
+       - docker-registry
+  tags:
+       - registry-manager
 
-  vars_files:
-    - roles/docker_registry/defaults/main.yml
-    - roles/docker_registry/vars/main.yml
 
-  tasks:
-    - include: roles/docker_registry/tasks/main.yml
-
-  handlers:
-    - include: roles/docker_registry/handlers/main.yml
+- name:  deploy docker registry worker  
+  hosts: swarm-workers
+  become: yes
+  become_method: sudo
+  become_user: root
+  roles:
+       - docker-registry-worker
+  tags:
+       - registry-worker
